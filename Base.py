@@ -1,5 +1,4 @@
 from Exceptions import NoSuchTypeException, RetrieveException
-from Retrievers import get_opdracht, get_hint, get_nieuws
 
 __all__ = ['SCORELIJST', 'OPDRACHT', 'OPDRACHTEN',
            'HINT', 'HINTS', 'NIEUWS',
@@ -22,18 +21,21 @@ class Response:
             self.data = Opdracht(json["data"])
         elif self.type == OPDRACHTEN:
             self.data = []
+            from Retrievers import get_opdracht
             for opdracht in json["data"]:
                 self.data.append(get_opdracht(opdracht["ID"]))
         elif self.type == HINT:
             self.data = Hint(json["data"])
         elif self.type == OPDRACHTEN:
             self.data = []
+            from Retrievers import get_hint
             for hint in json["data"]:
                 self.data.append(get_hint(hint["ID"]))
         elif self.type == NIEUWS:
             self.data = Nieuws(json["data"])
         elif self.type == NIEUWSLIJST:
             self.data = []
+            from Retrievers import get_nieuws
             for nieuws in json["data"]:
                 self.data.append(get_nieuws(nieuws["ID"]))
         elif self.type == VOSSEN:
