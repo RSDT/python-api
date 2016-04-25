@@ -1,10 +1,10 @@
-from Exceptions import NoSuchTypeException, RetrieveException
+from jotihunt.Exceptions import NoSuchTypeException, RetrieveException
 
 __all__ = ['SCORELIJST', 'OPDRACHT', 'OPDRACHTEN',
            'HINT', 'HINTS', 'NIEUWS',
            'NIEUWSLIJST', 'VOSSEN', 'Response']
 
-SCORELIJST, OPDRACHT, OPDRACHTEN, HINT, HINTS, NIEUWS, NIEUWSLIJST, VOSSEN = range(8)
+OPDRACHT, OPDRACHTEN, HINT, HINTS, NIEUWS, NIEUWSLIJST, VOSSEN, SCORELIJST = range(8)
 
 
 class Response:
@@ -18,30 +18,42 @@ class Response:
         if self.type == SCORELIJST:
             self.data = ScoreLijst(json["data"])
         elif self.type == OPDRACHT:
-            self.data = Opdracht(json["data"])
+            self.data = Opdracht(json["data"][0])
         elif self.type == OPDRACHTEN:
             self.data = []
-            from Retrievers import get_opdracht
+            from jotihunt.Retrievers import get_opdracht
             for opdracht in json["data"]:
                 self.data.append(get_opdracht(opdracht["ID"]))
         elif self.type == HINT:
-            self.data = Hint(json["data"])
-        elif self.type == OPDRACHTEN:
+            self.data = Hint(json["data"][0])
+        elif self.type == HINTS:
             self.data = []
-            from Retrievers import get_hint
+            from jotihunt.Retrievers import get_hint
             for hint in json["data"]:
                 self.data.append(get_hint(hint["ID"]))
         elif self.type == NIEUWS:
-            self.data = Nieuws(json["data"])
+            self.data = Nieuws(json["data"][0])
         elif self.type == NIEUWSLIJST:
             self.data = []
-            from Retrievers import get_nieuws
+            from jotihunt.Retrievers import get_nieuws
             for nieuws in json["data"]:
                 self.data.append(get_nieuws(nieuws["ID"]))
         elif self.type == VOSSEN:
             self.data = Vos(json['data'])
         else:
             raise NoSuchTypeException(str(self.type))
+
+    def __str__(self):
+        data = ""
+        if type(self.data) == list:
+            data += '['
+            for d in self.data:
+                data += '\n' + str(d)
+            data += '\n]'
+        else:
+            data = str(self.data)
+        return '{\ntype: ' + str(self.type) + ',\nversion: ' + str(self.version) +\
+               ',\nlast_update: ' + str(self.last_update) + ',\ndata:\n' + data + '\n}'
 
 
 class Base:
@@ -50,6 +62,9 @@ class Base:
         self.titel = json['titel']
         self.inhoud = json['inhoud']
         self.datum = json['datum']
+
+    def __str__(self):
+        return str(self.titel)
 
 
 class Opdracht(Base):

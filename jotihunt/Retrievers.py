@@ -1,6 +1,6 @@
 import requests
 
-from Base import Response, NIEUWS, OPDRACHT, NIEUWSLIJST, HINTS, HINT, OPDRACHTEN, SCORELIJST, VOSSEN
+from jotihunt.Base import Response, NIEUWS, OPDRACHT, NIEUWSLIJST, HINTS, HINT, OPDRACHTEN, SCORELIJST, VOSSEN
 
 _base_url = "http://www.jotihunt.net/api/1.0/"
 
@@ -8,7 +8,8 @@ _base_url = "http://www.jotihunt.net/api/1.0/"
 def get_nieuws(ID):
     url = _base_url + "nieuws/" + str(ID)
     r = requests.get(url)
-    return Response(r.json(), NIEUWS)
+    json = r.json()
+    return Response(json, NIEUWS)
 
 
 def get_opdracht(ID):
@@ -52,5 +53,3 @@ def get_vossen():
     url = _base_url + "vossen"
     r = requests.get(url)
     return Response(r.json(), VOSSEN)
-
-get_nieuws_lijst()
