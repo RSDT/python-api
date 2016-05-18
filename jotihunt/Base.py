@@ -1,4 +1,4 @@
-from jotihunt.Exceptions import NoSuchTypeException, RetrieveException
+from Base.Exceptions import NoSuchTypeException, RetrieveException
 
 __all__ = ['SCORELIJST', 'OPDRACHT', 'OPDRACHTEN',
            'HINT', 'HINTS', 'NIEUWS',
