@@ -18,16 +18,18 @@ class Api:
         self.last_update = None
         self.api_key = None
         self.hunternaam = None
-        self.login()
         self._base_url = 'http://jotihunt-API_V2.area348.nl/'
+        self.login()
 
     @staticmethod
     def get_instance(username, password):
         if username not in Api.instances:
             hasher = sha1()
-            hasher.update(password)
+            hasher.update(password.encode('utf-8'))
             hashed_password = hasher.hexdigest()
             Api.instances[username] = Api(username, hashed_password)
+        else:
+            pass
         return Api.instances[username]
 
     def _send_request(self, root, functie="", data=None):
@@ -40,7 +42,7 @@ class Api:
             r = requests.get(url)
         else:
             url = self._base_url + root + '/' + functie
-            r = requests.post(url, data=json.dump(data))
+            r = requests.post(url, data=json.dumps(data))
         if r.status_code == 401:
             raise VerificationError(r.content)
         elif r.status_code == 403:
@@ -148,9 +150,9 @@ class Api:
     def login(self):
         data = {'gebruiker': self.username, 'ww': self.hashed_password}
         root = 'login'
+        self.last_update = time.time()
         sleutel = self._send_request(root, data=data)['SLEUTEL']
         self.api_key = sleutel
-        self.last_update = time.time()
 
     def send_hunter_location(self, lat, lon, icon=0):
         if self.hunternaam is None:
