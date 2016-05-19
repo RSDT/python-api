@@ -127,7 +127,10 @@ class Api:
         return data
 
     def meta(self):
-        raise NotImplementedError()
+        root = 'meta'
+        functie = ''
+        data = self._send_request(root, functie)
+        return data
 
     def sc_all(self):
         root = 'sc'
